@@ -3,6 +3,76 @@
 {% block title %}Home - Recipe App{% endblock %}
 
 {% block content %}
-    <h1>Welcome to the Recipe Sharing App</h1>
-    <p>Discover and share amazing recipes with others.</p>
+<div class="container mt-4">
+  <h2 class="mb-4">Discover Recipes</h2>
+
+  <!-- Filter Form -->
+  <form id="filterForm" method="get" class="mb-4">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <select name="time_of_eat" class="form-select">
+          <option value="">Time of Eat (All)</option>
+          <option value="breakfast" {% if request.args.get('time_of_eat') == 'breakfast' %}selected{% endif %}>Breakfast</option>
+          <option value="lunch" {% if request.args.get('time_of_eat') == 'lunch' %}selected{% endif %}>Lunch</option>
+          <option value="dinner" {% if request.args.get('time_of_eat') == 'dinner' %}selected{% endif %}>Dinner</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <select name="type_of_dish" class="form-select">
+          <option value="">Type of Dish (All)</option>
+          <option value="Indian" {% if request.args.get('type_of_dish') == 'Indian' %}selected{% endif %}>Indian</option>
+          <option value="Mexican" {% if request.args.get('type_of_dish') == 'Mexican' %}selected{% endif %}>Mexican</option>
+          <option value="Spanish" {% if request.args.get('type_of_dish') == 'Spanish' %}selected{% endif %}>Spanish</option>
+          <option value="Italian" {% if request.args.get('type_of_dish') == 'Italian' %}selected{% endif %}>Italian</option>
+          <option value="Punjabi" {% if request.args.get('type_of_dish') == 'Punjabi' %}selected{% endif %}>Punjabi</option>
+          <option value="Gujarati" {% if request.args.get('type_of_dish') == 'Gujarati' %}selected{% endif %}>Gujarati</option>
+          <option value="South Indian" {% if request.args.get('type_of_dish') == 'South Indian' %}selected{% endif %}>South Indian</option>
+          <option value="Salads" {% if request.args.get('type_of_dish') == 'Salads' %}selected{% endif %}>Salads</option>
+          <option value="Bengali" {% if request.args.get('type_of_dish') == 'Bengali' %}selected{% endif %}>Bengali</option>
+          <!-- Add more as needed -->
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <select name="language" class="form-select">
+          <option value="">Language (All)</option>
+          <option value="English" {% if request.args.get('language') == 'English' %}selected{% endif %}>English</option>
+          <option value="Hindi" {% if request.args.get('language') == 'Hindi' %}selected{% endif %}>Hindi</option>
+          <option value="Spanish" {% if request.args.get('language') == 'Spanish' %}selected{% endif %}>Spanish</option>
+          <option value="French" {% if request.args.get('language') == 'French' %}selected{% endif %}>French</option>
+          <!-- Add more languages as needed -->
+        </select>
+      </div>
+
+      <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Recipe Feed -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for recipe in recipes %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        {% if recipe.image %}
+          <img src="{{ url_for('static', filename=recipe.image) }}" class="card-img-top" alt="{{ recipe.title }}">
+        {% else %}
+          <img src="{{ url_for('static', filename='uploads/default_recipe.png') }}" alt="Default Recipe" class="card-img-top" style="height: 200px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ recipe.title }}</h5>
+          <p class="card-text">{{ recipe.description|truncate(100) }}</p>
+          <p class="mb-1"><strong>Time of Eat:</strong> {{ recipe.time_of_eat }}</p>
+          <p class="mb-1"><strong>Type of Dish:</strong> {{ recipe.type_of_dish }}</p>
+          <p class="mb-1"><strong>Language:</strong> {{ recipe.language }}</p>
+        </div>
+      </div>
+    </div>
+    {% else %}
+      <p>No recipes found matching your criteria.</p>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'basic.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Submit a New Recipe</h2>
+    <form method="POST" enctype="multipart/form-data" class="shadow p-4 rounded bg-light">
+        <div class="form-group mb-3">
+            <label for="title">Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="description">Description</label>
+            <textarea name="description" class="form-control" rows="2"></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="ingredients">Ingredients</label>
+            <textarea name="ingredients" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="instructions">Instructions</label>
+            <textarea name="instructions" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="image">Upload Image</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="time_of_eat">Time of Eat</label>
+            <select name="time_of_eat" class="form-control">
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="type_of_dish">Type of Dish</label>
+            <select name="type_of_dish" class="form-control">
+                <option value="Indian">Indian</option>
+                <option value="Mexican">Mexican</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Italian">Italian</option>
+                <option value="Punjabi">Punjabi</option>
+                <option value="Gujarati">Gujarati</option>
+                <option value="South Indian">South Indian</option>
+                <option value="Salads">Salads</option>
+                <option value="Bengali">Bengali</option>
+            </select>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="language">Language</label>
+            <select name="language" class="form-control">
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Gujarati">Gujarati</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Submit Recipe</button>
+    </form>
+</div>
+{% endblock %}
