@@ -1,8 +1,8 @@
 # app/routes/main_routes.py
 
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, url_for
 from app.models import Recipe
-from flask_login import login_required
+from flask_login import current_user
 
 main_bp = Blueprint('main', __name__)
 
@@ -23,7 +23,8 @@ def home():
 
     recipes = query.order_by(Recipe.created_at.desc()).all()
 
-    if request.is_json:
+    if request.accept_mimetypes['application/json'] >= request.accept_mimetypes['text/html']:
+        # Mobile API Response
         return jsonify([
             {
                 'id': r.id,
@@ -34,10 +35,17 @@ def home():
                 'time_of_eat': r.time_of_eat,
                 'type_of_dish': r.type_of_dish,
                 'language': r.language,
-                'image_url': url_for('static', filename=r.image) if r.image else None,
+                'image_url': url_for('static', filename=r.image.replace('static/', '')) if r.image else None,
                 'created_at': r.created_at.isoformat()
             }
             for r in recipes
         ])
 
-    return render_template('home.html', recipes=recipes)
+    # Web Page Response
+    return render_template(
+        'home.html',
+        recipes=recipes,
+        selected_time=time_of_eat,
+        selected_dish=type_of_dish,
+        selected_lang=language
+    )
