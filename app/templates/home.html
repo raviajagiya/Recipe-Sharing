@@ -49,9 +49,13 @@
             {% for recipe in recipes %}
                 <div class="col">
                     <div class="card h-100">
-                        {% if recipe.image %}
+                        <!--{% if recipe.image %}
                             <img src="{{ url_for('static', filename=recipe.image.replace('static/', '')) }}" class="card-img-top" alt="{{ recipe.title }}">
+                        {% endif %}-->
+                        {% if recipe.image %}
+                            <img src="{{ url_for('static', filename=recipe.image) }}" alt="{{ recipe.title }}" style="max-width: 100%; height: auto;">
                         {% endif %}
+
                         <div class="card-body">
                             <h5 class="card-title">{{ recipe.title }}</h5>
                             <p class="card-text">{{ recipe.description[:100] }}...</p>
