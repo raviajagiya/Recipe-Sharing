@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ recipe.title }} - Recipe{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    {% if recipe.image %}
+        <img src="{{ url_for('static', filename='uploads/' + recipe.image) }}" class="card-img-top" alt="{{ recipe.title }}">
+    {% endif %}
+    <div class="card-body">
+        <h3>{{ recipe.title }}</h3>
+        <p><strong>Description:</strong> {{ recipe.description }}</p>
+        <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+        <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+        <p><strong>Time:</strong> {{ recipe.time_of_eat }}</p>
+        <p><strong>Dish Type:</strong> {{ recipe.type_of_dish }}</p>
+        <p><strong>Language:</strong> {{ recipe.language }}</p>
+    </div>
+</div>
+{% endblock %}

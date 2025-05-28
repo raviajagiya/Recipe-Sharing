@@ -1,6 +1,3 @@
-# used this file for create a table and operation in database 
-# it will perform operation if any of this not in the database
-
 from app import db
 from flask_login import UserMixin
 from datetime import datetime
@@ -11,6 +8,9 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), nullable=False, unique=True)
     password_hash = db.Column(db.String(256), nullable=False)
 
+    # One-to-many relationships
+    recipes = db.relationship('Recipe', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='user', lazy=True)
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,3 +24,14 @@ class Recipe(db.Model):
     image = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    likes = db.Column(db.Integer, default=0)
+
+    # One-to-many relationship with comments
+    comments = db.relationship('Comment', backref='recipe', lazy=True)
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

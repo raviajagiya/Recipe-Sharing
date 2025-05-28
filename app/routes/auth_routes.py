@@ -7,6 +7,8 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
 from flask import Blueprint
+from app.models import db
+
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 

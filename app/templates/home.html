@@ -10,6 +10,7 @@
         {% endif %}
     </div>
 
+    <!-- Search and Filter Form -->
     <form method="get" class="row g-3 mb-4">
         <div class="col-md-3">
             <input type="text" name="search" class="form-control" placeholder="Search by title..." value="{{ request.args.get('search', '') }}">
@@ -28,7 +29,6 @@
                 <option value="Indian" {% if selected_dish == 'Indian' %}selected{% endif %}>Indian</option>
                 <option value="Mexican" {% if selected_dish == 'Mexican' %}selected{% endif %}>Mexican</option>
                 <option value="Spanish" {% if selected_dish == 'Spanish' %}selected{% endif %}>Spanish</option>
-                <!-- Add more as needed -->
             </select>
         </div>
         <div class="col-md-2">
@@ -36,7 +36,6 @@
                 <option value="">Language</option>
                 <option value="English" {% if selected_lang == 'English' %}selected{% endif %}>English</option>
                 <option value="Hindi" {% if selected_lang == 'Hindi' %}selected{% endif %}>Hindi</option>
-                <!-- Add more as needed -->
             </select>
         </div>
         <div class="col-md-2">
@@ -44,24 +43,28 @@
         </div>
     </form>
 
+    <!-- Recipe Grid -->
     {% if recipes %}
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for recipe in recipes %}
                 <div class="col">
-                    <div class="card h-100">
-                        <!--{% if recipe.image %}
-                            <img src="{{ url_for('static', filename=recipe.image.replace('static/', '')) }}" class="card-img-top" alt="{{ recipe.title }}">
-                        {% endif %}-->
+                    <div class="card h-100 shadow-sm">
                         {% if recipe.image %}
-                            <img src="{{ url_for('static', filename=recipe.image) }}" alt="{{ recipe.title }}" style="max-width: 100%; height: auto;">
+                            <img src="{{ url_for('static', filename='uploads/' ~ (recipe.image if recipe.image else 'default_recipe.png')) }}"
+                            class="card-img-top" alt="Recipe Image">
                         {% endif %}
-
                         <div class="card-body">
                             <h5 class="card-title">{{ recipe.title }}</h5>
                             <p class="card-text">{{ recipe.description[:100] }}...</p>
-                            <p class="text-muted mb-0">
+                        </div>
+                        <div class="card-footer bg-light d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
                                 <strong>{{ recipe.time_of_eat }}</strong> | {{ recipe.type_of_dish }} | {{ recipe.language }}
-                            </p>
+                            </small>
+                            <form method="post" action="#" class="d-inline">
+                                <!-- Replace `#` with like endpoint -->
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Like ❤️</button>
+                            </form>
                         </div>
                     </div>
                 </div>

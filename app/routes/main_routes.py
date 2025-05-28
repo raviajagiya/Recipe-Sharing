@@ -1,8 +1,9 @@
 # app/routes/main_routes.py
 
 from flask import Blueprint, render_template, request, jsonify, url_for
-from app.models import Recipe
 from flask_login import current_user
+from app.models import db, Recipe
+
 
 main_bp = Blueprint('main', __name__)
 
