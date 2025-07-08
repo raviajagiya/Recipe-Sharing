@@ -6,12 +6,12 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Recipe Feed</h2>
         {% if current_user.is_authenticated %}
-            <a href="{{ url_for('recipe.submit_recipe') }}" class="btn btn-primary">Submit Recipe</a>
+            {# Link to the route that renders the recipe submission form #}
+            <a href="{{ url_for('recipes.add_recipe_form') }}" class="btn btn-primary">Submit Recipe</a>
         {% endif %}
     </div>
 
-    <!-- Search and Filter Form -->
-    <form method="get" class="row g-3 mb-4">
+    <form method="get" class="row g-3 mb-4" action="{{ url_for('recipes.home') }}"> {# Ensure form submits to recipes.home #}
         <div class="col-md-3">
             <input type="text" name="search" class="form-control" placeholder="Search by title..." value="{{ request.args.get('search', '') }}">
         </div>
@@ -21,14 +21,22 @@
                 <option value="Breakfast" {% if selected_time == 'Breakfast' %}selected{% endif %}>Breakfast</option>
                 <option value="Lunch" {% if selected_time == 'Lunch' %}selected{% endif %}>Lunch</option>
                 <option value="Dinner" {% if selected_time == 'Dinner' %}selected{% endif %}>Dinner</option>
+                <option value="Snack" {% if selected_time == 'Snack' %}selected{% endif %}>Snack</option> {# Added Snack option #}
             </select>
         </div>
         <div class="col-md-2">
             <select name="type_of_dish" class="form-select">
                 <option value="">Type of Dish</option>
+                {# Make sure these values match what you store in your DB or want to filter by #}
                 <option value="Indian" {% if selected_dish == 'Indian' %}selected{% endif %}>Indian</option>
                 <option value="Mexican" {% if selected_dish == 'Mexican' %}selected{% endif %}>Mexican</option>
                 <option value="Spanish" {% if selected_dish == 'Spanish' %}selected{% endif %}>Spanish</option>
+                <option value="Italian" {% if selected_dish == 'Italian' %}selected{% endif %}>Italian</option>
+                <option value="Punjabi" {% if selected_dish == 'Punjabi' %}selected{% endif %}>Punjabi</option>
+                <option value="Gujarati" {% if selected_dish == 'Gujarati' %}selected{% endif %}>Gujarati</option>
+                <option value="South Indian" {% if selected_dish == 'South Indian' %}selected{% endif %}>South Indian</option>
+                <option value="Salads" {% if selected_dish == 'Salads' %}selected{% endif %}>Salads</option>
+                <option value="Bengali" {% if selected_dish == 'Bengali' %}selected{% endif %}>Bengali</option>
             </select>
         </div>
         <div class="col-md-2">
@@ -36,41 +44,73 @@
                 <option value="">Language</option>
                 <option value="English" {% if selected_lang == 'English' %}selected{% endif %}>English</option>
                 <option value="Hindi" {% if selected_lang == 'Hindi' %}selected{% endif %}>Hindi</option>
+                <option value="Spanish" {% if selected_lang == 'Spanish' %}selected{% endif %}>Spanish</option>
+                <option value="Gujarati" {% if selected_lang == 'Gujarati' %}selected{% endif %}>Gujarati</option>
             </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1"> {# Adjusted column size for buttons #}
             <button type="submit" class="btn btn-outline-success w-100">Search</button>
+        </div>
+        <div class="col-md-1"> {# Added a clear filters button #}
+            <a href="{{ url_for('recipes.home') }}" class="btn btn-outline-secondary w-100">Clear</a>
         </div>
     </form>
 
-    <!-- Recipe Grid -->
     {% if recipes %}
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for recipe in recipes %}
                 <div class="col">
                     <div class="card h-100 shadow-sm">
                         {% if recipe.image %}
-                            <img src="{{ url_for('static', filename='uploads/' ~ (recipe.image if recipe.image else 'default_recipe.png')) }}"
-                            class="card-img-top" alt="Recipe Image">
+                            {# Ensure image path is correct, use `~` for string concat in Jinja #}
+                            <img src="{{ url_for('static', filename='uploads/' ~ recipe.image) }}"
+                            class="card-img-top recipe-card-img" alt="{{ recipe.title }}">
+                        {% else %}
+                            {# Fallback for no image, ensure this file exists #}
+                            <img src="{{ url_for('static', filename='images/default_recipe.png') }}"
+                            class="card-img-top recipe-card-img" alt="Default Recipe Image">
                         {% endif %}
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column"> {# Use flex-column for sticky button #}
                             <h5 class="card-title">{{ recipe.title }}</h5>
-                            <p class="card-text">{{ recipe.description[:100] }}...</p>
+                            <p class="card-text text-muted small mb-2">
+                                {# Using Font Awesome icons for better visuals #}
+                                <i class="fas fa-utensils"></i> {{ recipe.type_of_dish | default('N/A') }} |
+                                <i class="fas fa-clock"></i> {{ recipe.time_of_eat | default('N/A') }} |
+                                <i class="fas fa-language"></i> {{ recipe.language | default('N/A') }}
+                            </p>
+                            {# Display likes count #}
+                            <p class="card-text mb-3">
+                                <i class="fas fa-heart text-danger"></i>
+                                {# Assuming recipe.likes_count exists. Default to 0 if not. #}
+                                {{ recipe.likes_count | default(0) }} Likes
+                            </p>
+                            {# View Recipe button at the bottom #}
+                            <a href="{{ url_for('recipes.view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary mt-auto">View Recipe</a>
                         </div>
-                        <div class="card-footer bg-light d-flex justify-content-between align-items-center">
-                            <small class="text-muted">
-                                <strong>{{ recipe.time_of_eat }}</strong> | {{ recipe.type_of_dish }} | {{ recipe.language }}
-                            </small>
-                            <form method="post" action="#" class="d-inline">
-                                <!-- Replace `#` with like endpoint -->
-                                <button type="submit" class="btn btn-sm btn-outline-primary">Like ❤️</button>
+                        {# You had a like form in card-footer. Move the view button into card-body #}
+                        {# If you want a like button in the footer, place it here. #}
+                        {# For now, I'm removing the `form` for like from here to simplify. #}
+                        {# The 'like' functionality is typically implemented with AJAX or a separate endpoint. #}
+                        {# <div class="card-footer bg-light d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Posted on {{ recipe.created_at.strftime('%Y-%m-%d') }}</small>
+                            <form method="post" action="{{ url_for('recipes.like_recipe', recipe_id=recipe.id) }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-heart"></i> Like</button>
                             </form>
-                        </div>
+                        </div> #}
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <p>No recipes found.</p>
+        <p>No recipes found matching your criteria.</p>
     {% endif %}
+
+    {# Add some custom CSS for image size to static/css/style.css #}
+    <style>
+        .recipe-card-img {
+            height: 200px; /* Fixed height for consistency */
+            object-fit: cover; /* Ensures image covers the area without distortion */
+        }
+    </style>
+
 {% endblock %}

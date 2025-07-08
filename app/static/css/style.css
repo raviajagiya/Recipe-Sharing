@@ -1,0 +1,12 @@
+/* Custom CSS for recipe card images */
+.recipe-card-img {
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    width: 100%; /* Make sure it takes full width of the card */
+}
+
+/* Optional: Add some padding to the container for better spacing */
+.container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
