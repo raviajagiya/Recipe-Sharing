@@ -66,7 +66,7 @@
                             <img src="{{ url_for('static', filename='uploads/' ~ recipe.image) }}"
                             class="card-img-top recipe-card-img" alt="{{ recipe.title }}">
                         {% else %}
-                            {# Fallback for no image, ensure this file exists #}
+                            {# if no image given then use default one #}
                             <img src="{{ url_for('static', filename='images/default_recipe.png') }}"
                             class="card-img-top recipe-card-img" alt="Default Recipe Image">
                         {% endif %}
@@ -85,18 +85,7 @@
                                 {{ recipe.likes_count | default(0) }} Likes
                             </p>
                             {# View Recipe button at the bottom #}
-                            <a href="{{ url_for('recipes.view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary mt-auto">View Recipe</a>
-                        </div>
-                        {# You had a like form in card-footer. Move the view button into card-body #}
-                        {# If you want a like button in the footer, place it here. #}
-                        {# For now, I'm removing the `form` for like from here to simplify. #}
-                        {# The 'like' functionality is typically implemented with AJAX or a separate endpoint. #}
-                        {# <div class="card-footer bg-light d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Posted on {{ recipe.created_at.strftime('%Y-%m-%d') }}</small>
-                            <form method="post" action="{{ url_for('recipes.like_recipe', recipe_id=recipe.id) }}" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-heart"></i> Like</button>
-                            </form>
-                        </div> #}
+                            <a href="{{ url_for('recipes.view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary mt-auto">View Recipe</a>                        </div>
                     </div>
                 </div>
             {% endfor %}
