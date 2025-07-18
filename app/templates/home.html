@@ -96,6 +96,11 @@
 
     {# Add some custom CSS for image size to static/css/style.css #}
     <style>
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
         .recipe-card-img {
             height: 200px; /* Fixed height for consistency */
             object-fit: cover; /* Ensures image covers the area without distortion */
