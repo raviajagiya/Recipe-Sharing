@@ -3,13 +3,13 @@
 {% block title %}Home - Recipe App{% endblock %}
 
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <!--<div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Recipe Feed</h2>
         {% if current_user.is_authenticated %}
             {# Link to the route that renders the recipe submission form #}
-            <a href="{{ url_for('recipes.add_recipe_form') }}" class="btn btn-primary">Submit Recipe</a>
+            <a href="{{ url_for('recipes.create_recipe') }}" class="btn btn-primary">Submit Recipe</a>
         {% endif %}
-    </div>
+    </div>-->
 
     <form method="get" class="row g-3 mb-4" action="{{ url_for('recipes.home') }}"> {# Ensure form submits to recipes.home #}
         <div class="col-md-3">
@@ -62,12 +62,12 @@
                 <div class="col">
                     <div class="card h-100 shadow-sm">
                         {% if recipe.image %}
-                            {# Ensure image path is correct, use `~` for string concat in Jinja #}
+                            {#`~` for string concat in Jinja #}
                             <img src="{{ url_for('static', filename='uploads/' ~ recipe.image) }}"
                             class="card-img-top recipe-card-img" alt="{{ recipe.title }}">
                         {% else %}
                             {# if no image given then use default one #}
-                            <img src="{{ url_for('static', filename='images/default_recipe.png') }}"
+                            <img src="{{ url_for('static', filename='uploads/default_recipe.png') }}"
                             class="card-img-top recipe-card-img" alt="Default Recipe Image">
                         {% endif %}
                         <div class="card-body d-flex flex-column"> {# Use flex-column for sticky button #}

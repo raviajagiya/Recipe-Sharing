@@ -8,9 +8,21 @@ recipe_bp = Blueprint('recipes', __name__, url_prefix='/recipes')
 
 UPLOAD_FOLDER = 'static/uploads'
 
+def show():
+    request.form.get('title')
+    request.form.get('description')
+    request.form.get('ingredients')
+    request.form.get('instructions')
+    request.form.get('time_of_eat')
+    request.form.get('language')
+    request.form.get('user_id', 1)
+    return render_template('submit_recipe.html')
+
 # Unified recipe creation (web + mobile)
-@recipe_bp.route('/create', methods=['POST'])
+@recipe_bp.route('/create', methods=['POST','GET'])
 def create_recipe():
+    if request.method == 'GET':
+        return show()
     title = request.form.get('title')
     description = request.form.get('description')
     ingredients = request.form.get('ingredients')

@@ -20,7 +20,7 @@
             <ul class="navbar-nav ms-auto">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('recipes.add_recipe_form') }}">Add Recipe</a> {# Corrected link for web form #}
+                        <a class="nav-link" href="{{ url_for('recipes.create_recipe') }}">Add Recipe</a> {# Corrected link for web form #}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Hello, {{ current_user.username }}</a>
