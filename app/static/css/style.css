@@ -42,3 +42,44 @@
   align-items: center;
   margin-top: auto;
 }
+
+.recipe-detail-img {
+  max-height: 300px;
+  object-fit: cover;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .recipe-detail-img {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-bar input,
+  .search-bar select,
+  .search-bar button {
+    font-size: 0.9rem;
+  }
+
+  .search-bar .form-select,
+  .search-bar .form-control {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.recipe-card-img {
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.9rem;
+  color: #444;
+}
