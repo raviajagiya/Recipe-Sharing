@@ -1,19 +1,44 @@
-/* Custom CSS for recipe card images */
-.recipe-card-img {
-    height: 200px; /* Fixed height for consistency */
-    object-fit: cover; /* Ensures image covers the area without distortion */
-    width: 100%; /* Make sure it takes full width of the card */
+/* Container spacing only for recipe feed */
+.recipe-feed-wrapper {
+  padding: 20px 0;
 }
 
-/* Optional: Add some padding to the container for better spacing */
-.container {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
+/* Recipe card image */
 .recipe-card-img {
   width: 100%;
-  height: 200px;           /* Shrinks oversized images */
-  object-fit: cover;       /* Prevents distortion */
-  border-radius: 4px;      /* Optional: smooth corners */
+  height: 200px;           /* uniform height */
+  object-fit: cover;       /* crop without distortion */
+  border-radius: 4px;      /* smooth corners */
+  transition: transform .3s ease;  /* for hover effect */
+}
+
+/* Hover effect on card if desired */
+.card:hover .recipe-card-img {
+  transform: scale(1.05);
+}
+
+/* Truncate long descriptions */
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* Meta info under title */
+.card-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Ensure your like/comment counts and view button line up */
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
 }
