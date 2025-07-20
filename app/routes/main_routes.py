@@ -41,8 +41,7 @@ def home():
             }
             for r in recipes
         ])
-
-    # Web Page Response
+    
     return render_template(
         'home.html',
         recipes=recipes,

@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container py-4">
 
-  <!-- 🧠 Responsive Filter + Search Bar -->
+  <!-- Responsive Filter + Search Bar -->
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
     <h3 class="mb-3 mb-md-0">Recipe Feed</h3>
     {% if current_user.is_authenticated %}
@@ -12,17 +12,17 @@
     {% endif %}
   </div>
 
-  <!-- 📱 Mobile toggle button -->
+  <!-- Mobile toggle button -->
   <button class="btn btn-outline-secondary d-md-none mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterBar" aria-expanded="false">
     🔍 Filter & Search
   </button>
 
-  <!-- 🔎 Filter Bar -->
+  <!-- Filter Bar -->
   <div class="collapse d-md-block mb-4" id="filterBar">
     <form method="get" action="{{ url_for('recipes.home') }}" class="row g-3">
       <div class="col-12 col-md-3">
         <input type="text" name="search" class="form-control" placeholder="Search by title..."
-               value="{{ request.args.get('search', '') }}">
+                value="{{ request.args.get('search', '') }}">
       </div>
       <div class="col-12 col-md-2">
         <select name="time_of_eat" class="form-select">
