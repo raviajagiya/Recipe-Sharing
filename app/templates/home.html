@@ -4,31 +4,55 @@
 {% block content %}
 <div class="container py-4">
 
-  <!-- Responsive Filter + Search Bar -->
+  <!-- Header & Submit -->
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
     <h3 class="mb-3 mb-md-0">Recipe Feed</h3>
     {% if current_user.is_authenticated %}
-      <a href="{{ url_for('recipes.create_recipe') }}" class="btn btn-primary">Submit Recipe</a>
+      <a
+        href="{{ url_for('recipes.create_recipe') }}"
+        class="btn btn-primary"
+      >
+        Submit Recipe
+      </a>
     {% endif %}
   </div>
 
-  <!-- Mobile toggle button -->
-  <button class="btn btn-outline-secondary d-md-none mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterBar" aria-expanded="false">
+  <!-- Mobile Filter Toggle -->
+  <button
+    class="btn btn-outline-secondary d-md-none mb-3"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#filterBar"
+  >
     🔍 Filter & Search
   </button>
 
   <!-- Filter Bar -->
   <div class="collapse d-md-block mb-4" id="filterBar">
-    <form method="get" action="{{ url_for('recipes.home') }}" class="row g-3">
+    <form
+      method="get"
+      action="{{ url_for('recipes.home') }}"
+      class="row g-3"
+    >
       <div class="col-12 col-md-3">
-        <input type="text" name="search" class="form-control" placeholder="Search by title..."
-                value="{{ request.args.get('search', '') }}">
+        <input
+          type="text"
+          name="search"
+          class="form-control"
+          placeholder="Search by title..."
+          value="{{ request.args.get('search','') }}"
+        >
       </div>
       <div class="col-12 col-md-2">
         <select name="time_of_eat" class="form-select">
           <option value="">Time of Eat</option>
           {% for label in ['Breakfast','Lunch','Dinner','Snack'] %}
-            <option value="{{ label }}" {% if selected_time == label %}selected{% endif %}>{{ label }}</option>
+            <option
+              value="{{ label }}"
+              {% if selected_time == label %}selected{% endif %}
+            >
+              {{ label }}
+            </option>
           {% endfor %}
         </select>
       </div>
@@ -36,7 +60,12 @@
         <select name="type_of_dish" class="form-select">
           <option value="">Type of Dish</option>
           {% for dish in ['Indian','Mexican','Spanish','Italian','Punjabi','Gujarati','South Indian','Salads','Bengali'] %}
-            <option value="{{ dish }}" {% if selected_dish == dish %}selected{% endif %}>{{ dish }}</option>
+            <option
+              value="{{ dish }}"
+              {% if selected_dish == dish %}selected{% endif %}
+            >
+              {{ dish }}
+            </option>
           {% endfor %}
         </select>
       </div>
@@ -44,41 +73,76 @@
         <select name="language" class="form-select">
           <option value="">Language</option>
           {% for lang in ['English','Hindi','Spanish','Gujarati'] %}
-            <option value="{{ lang }}" {% if selected_lang == lang %}selected{% endif %}>{{ lang }}</option>
+            <option
+              value="{{ lang }}"
+              {% if selected_lang == lang %}selected{% endif %}
+            >
+              {{ lang }}
+            </option>
           {% endfor %}
         </select>
       </div>
       <div class="col-6 col-md-1">
-        <button type="submit" class="btn btn-success w-100">Search</button>
+        <button type="submit" class="btn btn-success w-100">
+          Search
+        </button>
       </div>
       <div class="col-6 col-md-1">
-        <a href="{{ url_for('recipes.home') }}" class="btn btn-outline-secondary w-100">Clear</a>
+        <a
+          href="{{ url_for('recipes.home') }}"
+          class="btn btn-outline-secondary w-100"
+        >
+          Clear
+        </a>
       </div>
     </form>
   </div>
 
-  <!-- 🧁 Recipe Grid -->
+  <!-- Recipe Grid -->
   {% if recipes %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       {% for recipe in recipes %}
         <div class="col">
           <div class="card h-100 shadow-sm">
             <!-- Image -->
-            <img src="{{ url_for('static', filename='uploads/' ~ recipe.image) if recipe.image else url_for('static', filename='uploads/default_recipe.png') }}"
-                 alt="{{ recipe.title }}" class="card-img-top recipe-card-img">
+            <img
+              src="{{ recipe.image
+                      and url_for('static',filename='uploads/'~recipe.image)
+                      or url_for('static',filename='uploads/default_recipe.png') }}"
+              alt="{{ recipe.title }}"
+              class="card-img-top recipe-card-img"
+            >
+
             <div class="card-body d-flex flex-column">
               <h5 class="card-title">{{ recipe.title }}</h5>
-              <p class="text-muted small mb-1">Shared by {{ recipe.author.username }} • {{ recipe.created_at.strftime('%b %d, %Y') }}</p>
+              <p class="text-muted small mb-1">
+                Shared by {{ recipe.author.username }}
+                • {{ recipe.created_at.strftime('%b %d, %Y') }}
+              </p>
               {% if recipe.description %}
-                <p class="card-text description mb-2">{{ recipe.description }}</p>
+                <p class="card-text description mb-2">
+                  {{ recipe.description }}
+                </p>
               {% endif %}
-              <p class="text-muted small mb-3">🍽 {{ recipe.type_of_dish }} &nbsp; ⏰ {{ recipe.time_of_eat }} &nbsp; 🈳 {{ recipe.language }}</p>
+              <p class="text-muted small mb-3">
+                🍽 {{ recipe.type_of_dish }} &nbsp;
+                ⏰ {{ recipe.time_of_eat }} &nbsp;
+                🈳 {{ recipe.language }}
+              </p>
+
               <div class="mt-auto d-flex justify-content-between align-items-center">
-                <div>
-                  ❤️ {{ recipe.likers|length if recipe.likers else 0 }} &nbsp;
-                  💬 {{ recipe.comments|length if recipe.comments else 0 }}
-                </div>
-                <a href="{{ url_for('recipes.view_recipe', recipe_id=recipe.id) }}" class="btn btn-sm btn-primary">View ▶️</a>
+                <button
+                  class="btn btn-sm btn-outline-danger like-btn"
+                  data-id="{{ recipe.id }}"
+                >
+                  ❤️ <span class="like-count">{{ recipe.likers|length }}</span>
+                </button>
+                <span>💬 {{ recipe.comments|length }}</span>
+                <a
+                  href="{{ url_for('recipes.view_recipe', recipe_id=recipe.id) }}"
+                  class="btn btn-sm btn-primary">
+                  View ▶️
+                </a>
               </div>
             </div>
           </div>
@@ -86,7 +150,9 @@
       {% endfor %}
     </div>
   {% else %}
-    <p class="text-muted">No recipes found matching your criteria.</p>
+    <p class="text-muted">
+      No recipes found matching your criteria.
+    </p>
   {% endif %}
 </div>
 {% endblock %}

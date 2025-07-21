@@ -1,8 +1,12 @@
 import os
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash, current_app
 from werkzeug.utils import secure_filename
-from app.models import db, Recipe
+from app import db
+from app.models import db, Recipe,Comment
 from datetime import datetime
+from flask_login import login_required, current_user
+from app.forms import CommentForm
+from sqlalchemy.orm import selectinload
 
 recipe_bp = Blueprint('recipes', __name__, url_prefix='/recipes')
 
@@ -134,8 +138,13 @@ def api_home():
 # Web: View single recipe
 @recipe_bp.route('/recipe/<int:recipe_id>')
 def view_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
-    return render_template('view_recipe.html', recipe=recipe)
+    recipe = Recipe.query.options(
+        selectinload(Recipe.likers),
+        selectinload(Recipe.comments).selectinload(Comment.user)
+    ).get_or_404(recipe_id)
+
+    comment_form=CommentForm()
+    return render_template('view_recipe.html', recipe=recipe,comment_form=comment_form)
 
 # API: View single recipe for mobile
 @recipe_bp.route('/api/recipe/<int:recipe_id>', methods=['GET'])
@@ -154,3 +163,39 @@ def get_recipe_api(recipe_id):
         'image_url': url_for('static', filename=f'uploads/{recipe.image}', _external=True) if recipe.image else None,
         'created_at': recipe.created_at.isoformat()
     })
+
+@recipe_bp.route('/<int:recipe_id>/like', methods=['POST'])
+@login_required
+def toggle_like(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+
+    if current_user in recipe.likers:
+        recipe.likers.remove(current_user)
+        action = 'unliked'
+    else:
+        recipe.likers.append(current_user)
+        action = 'liked'
+
+    db.session.commit()
+    return jsonify({
+        'action': action,
+        'count': recipe.likers.count()
+    })
+
+#comment
+@recipe_bp.route('/<int:recipe_id>/comment', methods=['POST'])
+@login_required
+def add_comment(recipe_id):
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(
+            content=form.content.data,
+            user_id=current_user.id,
+            recipe_id=recipe_id
+        )
+        db.session.add(comment)
+        db.session.commit()
+    else:
+        flash('Comment cannot be empty.', 'danger')
+
+    return redirect(url_for('recipes.view_recipe', recipe_id=recipe_id))
